@@ -48,6 +48,7 @@ export class ThreeTextEditorComponent implements AfterViewInit {
   ) {}
 
   @HostListener('window:resize')
+  @HostListener('window:orientationchange')
   private onRisize() {
     this.initThreeScene.onResize();
   }
