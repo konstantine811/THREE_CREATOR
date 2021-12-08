@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "fir-course-122a2": {
+      "hosting": {
+        "aui": [
+          "fir-course-122a2"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "fir-course-122a2"
+  }
+}

@@ -1,1 +1,368 @@
+@use "sass:math";
 /* You can add global styles to this file, and also import other style files */
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+$bgc--linear: linear-gradient(
+  107.95deg,
+  rgba(255, 255, 255, 0.09) 0%,
+  rgba(255, 250, 250, 0) 83.15%
+);
+$bgc-reverse--linear: linear-gradient(
+  107.95deg,
+  rgba(255, 250, 250, 0) 0,
+  rgba(255, 255, 255, 0.09) 83.15%
+);
+$dark-grey: #353535;
+$black: #000000;
+$white: #ffffff;
+$grey: #898989;
+$green: #b6ee36;
+$main-font: "Roboto", sans-serif;
+$shadow-outer: 0px 0px 4px 0px $black, -1px -2px 3px -2px $white,
+  inset 0px 0px 4px 0px transparent, inset -1px -2px 3px -2px transparent;
+$shadow-inner: 0px 0px 4px 0px transparent, -1px -2px 3px -2px transparent,
+  inset 0px 0px 4px 0px black, inset -1px -2px 3px -2px white;
+$common-border-radius: 8px;
+$switch--h: 35px;
+$switch--w: 80px;
+$dark-green: #5b6641;
+$btn-toggle--w: 50px;
+$sidebar--top: 100px;
+$common-time-function: cubic-bezier(0.53, 0.21, 0, 1);
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: $shadow-inner;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $dark-grey;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $green;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  right: -$btn-toggle--w;
+  width: $btn-toggle--w;
+}
+
+.btn-toggle {
+  width: $btn-toggle--w;
+  height: $btn-toggle--w;
+  border-radius: 0 $common-border-radius $common-border-radius 0;
+  background: $bgc-reverse--linear;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0 10px;
+  &:focus {
+    outline: none;
+  }
+}
+
+.toggle-line {
+  height: 2px;
+  background-color: $white;
+  position: relative;
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background-color: $white;
+    left: 0;
+    transform-origin: bottom left;
+    transition: transform 0.3s $common-time-function;
+  }
+  &:before {
+    bottom: 8px;
+  }
+  &:after {
+    top: 8px;
+  }
+  &.hide {
+    &:before {
+      transform: rotate(-38deg) scaleX(0.4) translate(-10px, 7px);
+    }
+    &:after {
+      transform: rotate(38deg) scaleX(0.4) translate(-12px, -7px);
+    }
+  }
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar {
+  position: absolute;
+  top: $sidebar--top;
+  width: auto;
+  border-radius: 0 $common-border-radius $common-border-radius 0;
+  background: $bgc--linear;
+  border-top: 1px solid $dark-grey;
+  box-shadow: 0 15px 20px 0 rgba($black, 0.5),
+    inset 0 15px 20px 0 rgba($black, 0.5),
+    inset 0 -15px 20px 0 rgba($black, 0.5);
+  padding: 10px 0;
+  backdrop-filter: blur(9px);
+  color: white;
+  transform: translateX(0);
+  transition: transform 0.6s $common-time-function;
+
+  &.hide {
+    transform: translateX(calc(-100% - 10px));
+  }
+  @media (max-width: 550px) {
+    width: calc(100% - 50px);
+  }
+}
+
+.sidebar-content {
+  max-height: calc(100vh - #{$sidebar--top * 2});
+  padding: 10px 0px 10px 10px;
+  width: 100%;
+  overflow: auto;
+  &__inner {
+    padding-right: 16px;
+  }
+}
+
+.label {
+  font-size: 16px;
+  font-weight: 100;
+  margin-bottom: 3px;
+}
+
+.input {
+  background-color: transparent;
+  border: none;
+  font-family: $main-font;
+  color: $grey;
+  font-size: 22px;
+  padding: 5px 11px;
+  border-bottom: 1px solid $grey;
+  box-shadow: inset 0px 0px 22px -16px $black;
+  border-radius: $common-border-radius;
+  font-weight: 300;
+  &:focus-visible {
+    outline: none;
+  }
+
+  &--number {
+    box-shadow: $shadow-outer;
+    max-width: 64px;
+    transition: box-shadow 0.1s ease-in;
+    border-bottom-color: transparent;
+    &:focus {
+      box-shadow: $shadow-inner;
+    }
+  }
+}
+
+.geometry-add {
+  margin-top: 20px;
+}
+
+.geo-count-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.geo-count {
+  margin-left: 20px;
+}
+
+.btn {
+  background: transparent;
+  font-family: $main-font;
+  border: none;
+  font-size: 18px;
+  color: $grey;
+  box-shadow: $shadow-outer;
+  border-radius: $common-border-radius;
+  font-weight: 300;
+  padding: 10px 19px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  &:hover {
+    background: rgba($black, 0.1);
+  }
+  &:active {
+    box-shadow: $shadow-inner;
+  }
+  &__add {
+    margin-right: 15px;
+  }
+  &__remove {
+    margin-top: 10px;
+  }
+  &__wrap {
+    margin-top: 20px;
+  }
+}
+
+.texture-img {
+  max-width: 40px;
+  border-radius: 50%;
+  margin: 21px 6px 0;
+  cursor: pointer;
+  transition: filter 0.3s ease, transform 0.2s cubic-bezier(0.92, 0.1, 0, 0.82);
+  will-change: filter, transform;
+  &.selected {
+    filter: drop-shadow(0px 0px 10px $grey);
+    transform: scale(1.2);
+  }
+}
+
+.range-wrap {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 21px;
+  align-items: center;
+}
+
+.range-value {
+  margin-left: 16px;
+  box-shadow: $shadow-outer;
+  border-radius: $common-border-radius;
+  padding: 5px 12px;
+}
+
+.range-slider {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.range {
+  width: 100%;
+  height: 15px;
+  -webkit-appearance: none;
+  background: transparent;
+  outline: none;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: inset 8px 8px 24px -7px $black;
+}
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: $green;
+  cursor: pointer;
+  border: 4px solid $dark-grey;
+  box-shadow: -407px 0 0 400px $green;
+}
+
+/** --------------------------switch-------------------------- **/
+
+.switch-wrap {
+  display: flex;
+  align-items: center;
+}
+.switch .checkbox {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switch {
+  position: relative;
+  width: $switch--w;
+  height: $switch--h;
+  margin: 15px;
+  font: 600 13px $main-font;
+  border-radius: 25px;
+  display: inline-block;
+}
+
+.checkbox {
+  border-radius: 25px;
+  margin: 15px;
+  box-sizing: border-box;
+  text-align: center;
+  border: none;
+  color: $green;
+  font-size: 20px;
+  background: $dark-green;
+  box-shadow: inset 5px 5px 8px 1px rgba($black, 0.2),
+    inset -5px -5px 8px 0px rgba($dark-green, 0.3),
+    inset -1px -2px 2px 0px rgba($dark-green, 0.4);
+  transition: all 0.3s ease-in-out;
+}
+
+.checkbox:focus {
+  outline: none;
+  box-shadow: inset 5px 5px 8px 1px rgba($black, 0.2),
+    inset -5px -5px 8px 0px rgba($dark-green, 0.3),
+    inset -1px -2px 2px 0px rgba($dark-green, 0.4),
+    5px 5px 10px 2.5px rgba($black, 0.2),
+    -5px -5px 10px 2.5px rgba($dark-green, 0.4),
+    -1px -1px 4px 2px rgba($dark-green, 0.4);
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 25px;
+  background: rgba($dark-green, 0.2);
+  box-shadow: inset 5px 5px 8px 1px rgba($black, 0.2),
+    inset -5px -5px 8px 0px rgba($dark-green, 0.3),
+    inset -1px -2px 2px 0px rgba($dark-green, 0.4);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  color: rgba($grey, 0.2);
+}
+
+.slider:before {
+  position: absolute;
+  content: "OFF";
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  line-height: 45px;
+  width: math.div($switch--w, 2) - 5;
+  height: $switch--h - 10;
+  left: 10px;
+  bottom: 5px;
+  background: $dark-grey;
+  box-shadow: 2px 2px 5px 0px rgba($black, 0.2),
+    -2px -2px 2px 0px rgba($dark-green, 0.5);
+  border-radius: 20px;
+  transition: 0.4s;
+}
+/*----is ON----*/
+
+.checkbox:checked + .slider {
+  background: rgba($green, 0.5);
+  box-shadow: inset 5px 5px 8px 1px $dark-green,
+    inset -3px -3px 8px 0px rgba($green, 0.6), inset -2px -2px 2px 1px $green;
+}
+
+.checkbox:checked + .slider:before {
+  content: "ON";
+  transform: translateX(math.div($switch--w, 2) - 14);
+  box-shadow: 2px 2px 2px 1px $dark-green, -2px -2px 2px 0px $dark-green;
+  color: $green;
+}

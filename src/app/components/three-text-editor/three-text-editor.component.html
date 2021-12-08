@@ -1,0 +1,12 @@
+<app-side-bar
+  (typedText)="addText($event)"
+  (typedTexture)="changeTexture($event)"
+  (geometryTexture)="changeGeometryTexture($event)"
+  (addGeometry)="addGeometry($event)"
+  (removeGeometry)="removeGeometry($event)"
+  (changeRangeVal)="onChangeRangeVal($event)"
+  (saveFrame)="onSaveFrame()"
+  [isAnim]="isAnim"
+  (isAnimation)="isAnim = $event"
+  [rangeVal]="rangeVal"
+></app-side-bar>

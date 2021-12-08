@@ -1,0 +1,108 @@
+<div [ngClass]="{ hide: isHide }" class="sidebar">
+  <div class="sidebar-toggle">
+    <button (click)="isHide = !isHide" class="btn-toggle">
+      <div [ngClass]="{ hide: !isHide }" class="toggle-line"></div>
+    </button>
+  </div>
+  <div class="sidebar-content">
+    <div class="sidebar-content__inner">
+      <form onsubmit="event.preventDefault();">
+        <input
+          (keyup)="onKey($event)"
+          class="input"
+          placeholder="Your text"
+          type="text"
+        />
+      </form>
+      <div class="texture-select-wrap">
+        <img
+          class="texture-img"
+          *ngFor="let nameIndex of matcapImg"
+          [ngClass]="{ selected: selectedIndex === nameIndex }"
+          [src]="getPath(nameIndex)"
+          [alt]="getPath(nameIndex)"
+          (click)="onTextureSelected(nameIndex)"
+        />
+      </div>
+      <ng-container *ngFor="let geometry of threeGeometry; let i = index">
+        <div class="geometry-add">
+          <div class="flex-container">
+            <div class="btn__wrap">
+              <button
+                (click)="onAddGeometry(geometry.geometryName, i)"
+                class="btn btn__add"
+              >
+                Add {{ geometry.geometryName }}
+              </button>
+              <button
+                (click)="onRemoveGeometry(geometry.geometryName, i)"
+                class="btn btn__remove"
+              >
+                Remove {{ geometry.geometryName }}
+              </button>
+            </div>
+            <div class="geo-count-wrap">
+              <label class="label" for="geo-count">count:</label>
+              <input
+                id="geo-count"
+                placeholder="1"
+                class="input input--number geo-count"
+                [(ngModel)]="geometry.count"
+                type="number"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="texture-select-wrap">
+          <img
+            class="texture-img"
+            *ngFor="let nameIndex of matcapImg"
+            [ngClass]="{
+              selected: geometry.selectedMaterialIndex === nameIndex
+            }"
+            [src]="getPath(nameIndex)"
+            [alt]="getPath(nameIndex)"
+            (click)="
+              geometryTextureSelected(geometry.geometryName, nameIndex, i)
+            "
+          />
+        </div>
+      </ng-container>
+      <div class="range-wrap">
+        <div class="range-slider">
+          <label class="label" for="range-slider">Space:</label>
+          <input
+            id="range-slider"
+            class="range"
+            type="range"
+            min="0"
+            max="200"
+            value="0"
+            [(ngModel)]="rangeVal"
+            (change)="changeRange()"
+          />
+        </div>
+        <div class="range-value">
+          {{ rangeVal }}
+        </div>
+      </div>
+      <div class="switch-wrap">
+        <label class="label">Animation</label>
+        <label class="switch">
+          <input
+            [(ngModel)]="isAnim"
+            (change)="isAnimation.emit(isAnim)"
+            class="checkbox"
+            type="checkbox"
+          />
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <div class="save-frame">
+        <button (click)="saveFrame.emit()" class="btn btn__add">
+          Save frame
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
