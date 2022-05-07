@@ -1,11 +1,18 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
 // threejs
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 // dat gui
-import * as dat from 'dat.gui';
+import * as dat from 'lil-gui';
 // fonts
 import typeFaceFont from '@assets/fonts/json/Roboto/Roboto-Black.json';
 // services
@@ -17,7 +24,8 @@ import { TextureLoaderService } from '../../core/services/loaders/texture-loader
   templateUrl: './three-text.component.html',
   styleUrls: ['./three-text.component.scss'],
 })
-export class ThreeTextComponent implements OnInit {
+export class ThreeTextComponent implements OnInit, AfterViewInit {
+  @ViewChild('webgl', { static: true }) private webglEl!: ElementRef;
   private scene!: THREE.Scene;
   private renderer!: THREE.WebGLRenderer;
   private camera!: THREE.PerspectiveCamera;
@@ -30,9 +38,7 @@ export class ThreeTextComponent implements OnInit {
   constructor(
     private initThreeScene: InitThreeSceneService,
     private textureLoaderService: TextureLoaderService
-  ) {
-    this.initScene();
-  }
+  ) {}
 
   @HostListener('window:resize')
   private onRisize() {
@@ -108,8 +114,9 @@ export class ThreeTextComponent implements OnInit {
   }
 
   initScene() {
-    const { scene, camera, controls, renderer } =
-      this.initThreeScene.initScene();
+    const { scene, camera, controls, renderer } = this.initThreeScene.initScene(
+      this.webglEl.nativeElement
+    );
     this.scene = scene;
     this.camera = camera;
 
@@ -147,4 +154,8 @@ export class ThreeTextComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    this.initScene();
+  }
 }

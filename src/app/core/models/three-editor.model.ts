@@ -15,3 +15,13 @@ export interface IThreeEditMaterialEvent {
   geometryName: ThreeGeometry;
   path: string;
 }
+
+export interface IWindowSizes {
+  width: number;
+  height: number;
+}
+
+export interface ITimeEmmitData {
+  elapsedTime: number;
+  deltaTime: number;
+}

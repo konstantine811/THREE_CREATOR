@@ -1,0 +1,58 @@
+.preload {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.4);
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.preload_content {
+  width: 33%;
+}
+
+.preload__text {
+  text-align: center;
+  position: relative;
+  &:after {
+    content: " . . .";
+    position: absolute;
+    margin-left: 10px;
+    animation: dot-animation 2s ease-in backwards infinite;
+  }
+}
+
+.preload__bar {
+  height: 20px;
+  width: 100%;
+  border: solid 1px white;
+  position: relative;
+  overflow: hidden;
+}
+
+.preload__progress-bar {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: black;
+  transform: translateX(-100%);
+  transition: transform 0.1s ease;
+}
+
+@keyframes dot-animation {
+  0% {
+    content: " .";
+  }
+  50% {
+    content: " .  .";
+  }
+  100% {
+    content: " . . .";
+  }
+}

@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 // threejs
 import * as THREE from 'three';
@@ -19,6 +19,8 @@ import {
   ThreeGeometry,
   THREE_GEOMETRY_TYPES,
 } from '@app/core/configs/three-editor.config';
+// dat gui
+import * as dat from 'lil-gui';
 
 @Component({
   selector: 'app-three-text-editor',
@@ -26,6 +28,7 @@ import {
   styleUrls: ['./three-text-editor.component.scss'],
 })
 export class ThreeTextEditorComponent implements AfterViewInit {
+  @ViewChild('webgl', { static: true }) private webglEl!: ElementRef;
   private scene!: THREE.Scene;
   private renderer!: THREE.WebGLRenderer;
   private camera!: THREE.PerspectiveCamera;
@@ -39,9 +42,12 @@ export class ThreeTextEditorComponent implements AfterViewInit {
   isAnim = false;
   rangeVal = 10;
   readonly threeGeometry = THREE_GEOMETRY_TYPES;
+  private gui!: dat.GUI;
+  private groupCube!: THREE.Group;
+  private translateCount = 0;
+  private transformTranslate = 0.01;
 
   constructor(
-    private elRef: ElementRef,
     private initThreeScene: InitThreeSceneService,
     private textureLoaderService: TextureLoaderService,
     private fontLoaderService: FontLoaderService
@@ -78,7 +84,7 @@ export class ThreeTextEditorComponent implements AfterViewInit {
 
   async initScene() {
     const { scene, camera, controls, renderer } = this.initThreeScene.initScene(
-      this.elRef.nativeElement
+      this.webglEl.nativeElement
     );
     this.scene = scene;
     this.camera = camera;
@@ -88,7 +94,8 @@ export class ThreeTextEditorComponent implements AfterViewInit {
     this.matcapMaterial = new THREE.MeshMatcapMaterial({
       matcap: matcapTexture,
     });
-
+    // add gui
+    this.gui = new dat.GUI();
     // create material for each geometries
     this.threeGeometry.forEach((item) => {
       this.matcapMaterials[item.geometryName] = new THREE.MeshMatcapMaterial({
@@ -102,8 +109,51 @@ export class ThreeTextEditorComponent implements AfterViewInit {
     this.currentFont = await this.fontLoaderService.loadFont(
       '/json/Roboto/Roboto-Black.json'
     );
-    this.update();
     this.addText();
+    this.addCube();
+    this.update();
+  }
+
+  update() {
+    this.initThreeScene.animate$.subscribe((res) => {
+      if (this.isAnim) {
+        this.group.traverse((obj) => {
+          if (obj.type === 'Mesh') {
+            obj.rotation.x += 0.01;
+            obj.rotation.y += 0.02;
+          }
+        });
+      }
+    });
+  }
+
+  addCube() {
+    const width = 0.3;
+    const count = 100;
+    const offset = 0.02;
+    this.groupCube = new THREE.Group();
+    this.scene.add(this.groupCube);
+    for (let x = 0; x <= count; x++) {
+      for (let z = 0; z <= count; z++) {
+        const geometry = new THREE.BoxBufferGeometry(width, width, width);
+        const mesh = new THREE.Mesh(geometry, this.matcapMaterial);
+        const xOffset = x * (width + offset);
+        const zOffset = z * (width + offset);
+        // const yOffset = y * (width + offset);
+        mesh.position.x = xOffset;
+        // mesh.position.y = -yOffset;
+        mesh.position.z = zOffset;
+        this.groupCube.add(mesh);
+        /* for (let y = 0; y <= count; y++) {
+
+        } */
+      }
+    }
+    this.groupCube.position.set(
+      -(width * count) / 2,
+      -(width * count) / 2,
+      -(width * count) / 2
+    );
   }
 
   changeTexture(path: string) {
@@ -152,19 +202,6 @@ export class ThreeTextEditorComponent implements AfterViewInit {
       mesh.name = event.geometryName;
       this.group.add(mesh);
     }
-  }
-
-  update() {
-    this.initThreeScene.animate$.subscribe((res) => {
-      if (this.isAnim) {
-        this.group.traverse((obj) => {
-          if (obj.type === 'Mesh') {
-            obj.rotation.x += 0.01;
-            obj.rotation.y += 0.02;
-          }
-        });
-      }
-    });
   }
 
   removeGeometry(event: IThreeEditGeometryEvent) {

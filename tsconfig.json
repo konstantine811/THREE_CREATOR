@@ -21,7 +21,8 @@
     "lib": ["es2018", "dom"],
     "paths": {
       "@assets/*": ["src/assets/*"],
-      "@app/*": ["src/app/*"]
+      "@app/*": ["src/app/*"],
+      "@core/*": ["src/app/core/*"]
     }
   },
   "angularCompilerOptions": {

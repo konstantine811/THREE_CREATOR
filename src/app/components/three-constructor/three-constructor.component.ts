@@ -1,8 +1,10 @@
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   HostBinding,
   HostListener,
+  ViewChild,
 } from '@angular/core';
 // threejs
 import * as THREE from 'three';
@@ -20,7 +22,7 @@ import stats from 'three/examples/jsm/libs/stats.module';
 // config
 import { Textures, TypeTextures } from './config';
 // dat gui
-import * as dat from 'dat.gui';
+import * as dat from 'lil-gui';
 
 @Component({
   selector: 'app-three-constructor',
